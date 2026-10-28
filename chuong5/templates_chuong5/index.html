@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 5 - Công cụ tính toán</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fb;
+            color: #243047;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2457d6, #673de6);
+            color: white;
+            padding: 32px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #e4eaff;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1050px;
+            margin: 30px auto;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 18px 12px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 14px;
+            text-align: center;
+            text-decoration: none;
+            color: #243047;
+            font-weight: bold;
+            box-shadow: 0 4px 14px rgba(30, 50, 90, 0.06);
+            transition: 0.2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            border-color: #4263eb;
+            color: #3158d9;
+            transform: translateY(-2px);
+        }
+
+        .menu .icon {
+            display: block;
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 28px rgba(30, 50, 90, 0.07);
+        }
+
+        .card h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #1e3a8a;
+        }
+
+        .description {
+            color: #718096;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d6ddeb;
+            border-radius: 9px;
+            font-size: 16px;
+            background: #fff;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #4263eb;
+            box-shadow: 0 0 0 3px rgba(66, 99, 235, 0.12);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .button {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 13px 18px;
+            background: #4263eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            background: #304fc7;
+        }
+
+        .result {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #edf4ff;
+            border: 1px solid #d5e4ff;
+        }
+
+        .result h3 {
+            color: #244cb5;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #244cb5;
+            margin: 6px 0;
+        }
+
+        .error {
+            margin-top: 20px;
+            padding: 14px;
+            color: #a32121;
+            background: #fff0f0;
+            border: 1px solid #ffcaca;
+            border-radius: 9px;
+        }
+
+        .note {
+            margin-top: 22px;
+            padding: 14px;
+            background: #fff8e8;
+            border-radius: 9px;
+            color: #76591c;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            color: #7b8799;
+            font-size: 14px;
+        }
+
+        @media (max-width: 650px) {
+            header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 20px auto;
+            }
+
+            .menu {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .menu a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                text-align: left;
+                padding: 12px 16px;
+            }
+
+            .menu .icon {
+                margin: 0;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>CHƯƠNG 5</h1>
+        <p>Ứng dụng tính điểm học phần, BMI và máy tính</p>
+    </header>
+
+    <main class="container">
+        <nav class="menu">
+            <a href="#tinhdiem"
+               class="{% if chuc_nang == 'tinhdiem' %}active{% endif %}">
+                <span class="icon">🎓</span>
+                <span>Tính điểm học phần</span>
+            </a>
+
+            <a href="#bmi"
+               class="{% if chuc_nang == 'bmi' %}active{% endif %}">
+                <span class="icon">💚</span>
+                <span>Tính chỉ số BMI</span>
+            </a>
+
+            <a href="#maytinh"
+               class="{% if chuc_nang == 'maytinh' %}active{% endif %}">
+                <span class="icon">🧮</span>
+                <span>Máy tính</span>
+            </a>
+        </nav>
+
+        <!-- CHỨC NĂNG 1: TÍNH ĐIỂM HỌC PHẦN -->
+        <section class="card" id="tinhdiem">
+            <h2>🎓 Tính điểm học phần</h2>
+            <p class="description">
+                Nhập điểm chuyên cần, giữa kỳ và cuối kỳ để tính điểm tổng kết.
+            </p>
+
+            <form method="POST" action="/">
+                <input type="hidden" name="chuc_nang" value="tinhdiem">
+
+                <div class="form-group">
+                    <label for="chuyen_can">Điểm chuyên cần (10%)</label>
+                    <input type="number" id="chuyen_can" name="chuyen_can"
+                           min="0" max="10" step="0.01" required
+                           placeholder="Nhập điểm từ 0 đến 10">
+                </div>
+
+                <div class="form-group">
+                    <label for="giua_ky">Điểm giữa kỳ (30%)</label>
+                    <input type="number" id="giua_ky" name="giua_ky"
+                           min="0" max="10" step="0.01" required
+                           placeholder="Nhập điểm từ 0 đến 10">
+                </div>
+
+                <div class="form-group">
+                    <label for="cuoi_ky">Điểm cuối kỳ (60%)</label>
+                    <input type="number" id="cuoi_ky" name="cuoi_ky"
+                           min="0" max="10" step="0.01" required
+                           placeholder="Nhập điểm từ 0 đến 10">
+                </div>
+
+                <button class="button" type="submit">
+                    Tính điểm tổng kết
+                </button>
+            </form>
+
+            {% if ket_qua and ket_qua.loai == 'tinhdiem' %}
+            <div class="result">
+                <h3>Kết quả học phần</h3>
+                <p>Điểm tổng kết:</p>
+                <div class="result-value">
+                    {{ "%.2f"|format(ket_qua.diem_tong_ket) }}
+                </div>
+                <p>Xếp loại: <strong>{{ ket_qua.xep_loai }}</strong></p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- CHỨC NĂNG 2: TÍNH BMI -->
+        <section class="card" id="bmi" style="margin-top: 24px;">
+            <h2>💚 Tính chỉ số BMI</h2>
+            <p class="description">
+                Nhập cân nặng và chiều cao để tính chỉ số khối cơ thể.
+            </p>
+
+            <form method="POST" action="/">
+                <input type="hidden" name="chuc_nang" value="bmi">
+
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="can_nang">Cân nặng (kg)</label>
+                        <input type="number" id="can_nang" name="can_nang"
+                               min="0.1" step="0.1" required
+                               placeholder="Ví dụ: 60">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chieu_cao">Chiều cao (cm)</label>
+                        <input type="number" id="chieu_cao" name="chieu_cao"
+                               min="1" step="0.1" required
+                               placeholder="Ví dụ: 170">
+                    </div>
+                </div>
+
+                <button class="button" type="submit">Tính BMI</button>
+            </form>
+
+            {% if ket_qua and ket_qua.loai == 'bmi' %}
+            <div class="result">
+                <h3>Kết quả BMI</h3>
+                <p>Chỉ số BMI của bạn:</p>
+                <div class="result-value">{{ ket_qua.bmi }}</div>
+                <p>Phân loại:
+                    <strong>{{ ket_qua.phan_loai }}</strong>
+                </p>
+                <p class="note">
+                    Đây là cách phân loại BMI tham khảo cho người trưởng thành.
+                    BMI không phải là chẩn đoán y khoa.
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- CHỨC NĂNG 3: MÁY TÍNH -->
+        <section class="card" id="maytinh" style="margin-top: 24px;">
+            <h2>🧮 Máy tính</h2>
+            <p class="description">
+                Thực hiện phép cộng, trừ, nhân và chia hai số.
+            </p>
+
+            <form method="POST" action="/">
+                <input type="hidden" name="chuc_nang" value="maytinh">
+
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="so_a">Số thứ nhất</label>
+                        <input type="number" id="so_a" name="so_a"
+                               step="any" required placeholder="Nhập số thứ nhất">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="so_b">Số thứ hai</label>
+                        <input type="number" id="so_b" name="so_b"
+                               step="any" required placeholder="Nhập số thứ hai">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phep_tinh">Chọn phép tính</label>
+                    <select id="phep_tinh" name="phep_tinh" required>
+                        <option value="cong">Cộng (+)</option>
+                        <option value="tru">Trừ (-)</option>
+                        <option value="nhan">Nhân (×)</option>
+                        <option value="chia">Chia (÷)</option>
+                    </select>
+                </div>
+
+                <button class="button" type="submit">Tính kết quả</button>
+            </form>
+
+            {% if ket_qua and ket_qua.loai == 'maytinh' %}
+            <div class="result">
+                <h3>Kết quả phép tính</h3>
+                <p>
+                    {{ ket_qua.so_a }} {{ ket_qua.ky_hieu }}
+                    {{ ket_qua.so_b }} =
+                </p>
+                <div class="result-value">
+                    {{ ket_qua.ket_qua_tinh }}
+                </div>
+            </div>
+            {% endif %}
+        </section>
+
+        {% if loi %}
+        <div class="error">
+            <strong>Thông báo:</strong> {{ loi }}
+        </div>
+        {% endif %}
+    </main>
+
+    <footer>
+        Chương 5 - Ứng dụng Flask và HTML
+    </footer>
+
+    <script>
+        // Khi chọn chức năng, cuộn đến đúng khu vực.
+        document.querySelectorAll('.menu a').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                const id = this.getAttribute('href');
+                const section = document.querySelector(id);
+
+                if (section) {
+                    event.preventDefault();
+                    section.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+
+                    history.replaceState(null, '', id);
+                }
+            });
+        });
+
+        // Nếu đã có kết quả, cuộn đến khu vực hiển thị kết quả.
+        const result = document.querySelector('.result');
+
+        if (result) {
+            result.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    </script>
+</body>
+</html>
