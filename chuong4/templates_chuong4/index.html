@@ -1,0 +1,54 @@
+
+{% extends "base.html" %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<h1>Chào mừng đến với {{ shop.name }}</h1>
+
+<section>
+    <h2>Thông tin quán</h2>
+
+    <p>
+        <strong>Địa chỉ:</strong>
+        {{ shop.address }}
+    </p>
+
+    <p>
+        <strong>Giờ mở cửa:</strong>
+        {{ shop.open }}h - {{ shop.close }}h
+    </p>
+</section>
+
+<section class="thong-bao">
+    {% if dang_mo %}
+        <p class="dang-mo">
+            Bây giờ là {{ gio }}h: quán đang mở cửa.
+        </p>
+    {% else %}
+        <p class="da-dong">
+            Bây giờ là {{ gio }}h: quán đã đóng cửa.
+        </p>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Chương trình khuyến mãi</h2>
+
+    {% if promotions %}
+        <ul>
+            {% for promotion in promotions %}
+                <li>{{ promotion }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Hiện chưa có khuyến mãi.</p>
+    {% endif %}
+</section>
+
+<p>
+    <a class="nut" href="{{ url_for('menu') }}">
+        Xem thực đơn
+    </a>
+</p>
+{% endblock %}

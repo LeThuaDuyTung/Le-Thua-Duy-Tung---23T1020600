@@ -1,0 +1,89 @@
+
+{% extends "base.html" %}
+
+{% block title %}Bảng thực đơn{% endblock %}
+
+{% block content %}
+<h1>Thực đơn ({{ tong_mon }} món)</h1>
+
+<style>
+    .bang-thuc-don {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .bang-thuc-don th,
+    .bang-thuc-don td {
+        border: 1px solid #ccc;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .bang-thuc-don th {
+        background-color: #6f4e37;
+        color: white;
+    }
+
+    .bang-thuc-don tr:nth-child(even) {
+        background-color: #f5f0eb;
+    }
+
+    .bang-thuc-don tr.het-hang {
+        background-color: #ffe5e5;
+        color: #a00000;
+    }
+
+    .thong-ke {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f0e7dc;
+        border-radius: 8px;
+    }
+</style>
+
+{% if items %}
+<table class="bang-thuc-don">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên món</th>
+            <th>Giá</th>
+            <th>Tình trạng</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in items %}
+        <tr class="{% if not item.available %}het-hang{% endif %}">
+            <td>{{ loop.index }}</td>
+            <td>{{ item.name.title() }}</td>
+            <td class="gia">{{ item.price | vnd }}</td>
+            <td>
+                {% if item.available %}
+                    Còn hàng
+                {% else %}
+                    Hết hàng
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="thong-ke">
+    <p>
+        Giá trung bình:
+        <strong>{{ gia_trung_binh | vnd }}</strong>
+    </p>
+
+    <p>
+        Đang có:
+        <strong>{{ so_mon_con }} món</strong>
+    </p>
+</div>
+
+{% else %}
+<p>Chưa có món nào.</p>
+{% endif %}
+{% endblock %}

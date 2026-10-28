@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %} - Sông Hương</title>
+
+    {% block styles %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        nav {
+            background: #6f4e37;
+            padding: 14px;
+            border-radius: 8px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        main {
+            min-height: 350px;
+            padding: 20px 0;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f2eee9;
+            text-align: center;
+        }
+
+        .gia {
+            color: brown;
+            font-weight: bold;
+        }
+
+        .nut {
+            display: inline-block;
+            padding: 8px 14px;
+            background: #6f4e37;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .thong-bao {
+            padding: 12px;
+            background: #f7f2ec;
+            border-radius: 6px;
+        }
+    </style>
+    {% endblock %}
+</head>
+
+<body>
+    {% include "_navbar.html" %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "_footer.html" %}
+</body>
+</html>

@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+
+{% block title %}Không tìm thấy trang{% endblock %}
+
+{% block content %}
+<h1>404 - Không tìm thấy trang</h1>
+
+<p>
+    Xin lỗi, trang bạn yêu cầu không tồn tại
+    hoặc số trang thực đơn không hợp lệ.
+</p>
+
+<p>
+    <a class="nut" href="{{ url_for('index') }}">
+        Về trang chủ
+    </a>
+</p>
+{% endblock %}

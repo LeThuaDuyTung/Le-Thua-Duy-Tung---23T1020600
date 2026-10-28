@@ -1,0 +1,33 @@
+
+{% extends "base.html" %}
+
+{% block title %}Liên hệ{% endblock %}
+
+{% block content %}
+<h1>Liên hệ với {{ shop.name }}</h1>
+
+<section>
+    <h2>Thông tin liên hệ</h2>
+
+    <p>
+        <strong>Tên quán:</strong>
+        {{ shop.name }}
+    </p>
+
+    <p>
+        <strong>Địa chỉ:</strong>
+        {{ shop.address }}
+    </p>
+
+    <p>
+        <strong>Điện thoại:</strong>
+        {{ shop.phone }}
+    </p>
+</section>
+
+<p>
+    <a class="nut" href="{{ url_for('index') }}">
+        Quay về trang chủ
+    </a>
+</p>
+{% endblock %}
