@@ -5,266 +5,236 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Trang chu quan ca phe</title>
-
-    <!-- Bootstrap CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <title>Tính điểm học phần</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #f3f6f3;
+            margin: 0;
+            padding: 30px 15px;
             font-family: Arial, sans-serif;
+            background: #eef2f7;
+            color: #1f2937;
         }
 
-        .navbar-brand {
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, #164e36, #438663);
-            color: white;
-            padding: 45px 20px;
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
             border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
-        .shop-card {
-            border: none;
-            border-radius: 16px;
-            overflow: hidden;
+        h1 {
+            text-align: center;
+            color: #1d4ed8;
+            margin-bottom: 8px;
         }
 
-        .section-title {
-            color: #286548;
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .formula {
+            padding: 14px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            background: #eff6ff;
+            line-height: 1.8;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: bold;
         }
 
-        .info-label {
-            color: #6c757d;
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px #dbeafe;
+        }
+
+        .error {
+            color: #dc2626;
             font-size: 14px;
+            margin-top: 7px;
         }
 
-        .info-value {
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 10px;
+        }
+
+        .result h2 {
+            margin-top: 0;
+            color: #047857;
+        }
+
+        .result p {
+            font-size: 17px;
+        }
+
+        .warning {
+            color: #b91c1c;
             font-weight: bold;
         }
 
-        .promotion-item {
-            border: none;
-            border-bottom: 1px solid #eeeeee;
-            padding: 15px 5px;
+        .note {
+            margin-top: 22px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.7;
         }
 
-        .promotion-item:last-child {
-            border-bottom: none;
-        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
 
-        footer {
-            color: #6c757d;
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <div class="container">
+        <h1>Tính điểm học phần</h1>
 
-    <!-- Thanh dieu huong -->
-    <nav class="navbar navbar-dark bg-success">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                SONG HUONG COFFEE
-            </a>
+        <p class="subtitle">
+            Công cụ tính điểm dành cho sinh viên
+        </p>
 
-            <span class="navbar-text text-white">
-                Xin chao ban!
-            </span>
-        </div>
-    </nav>
-
-    <main class="container py-4 py-md-5">
-
-        <!-- Phan gioi thieu -->
-        <section class="hero text-center mb-4">
-            <p class="text-uppercase mb-2">
-                Welcome to
-            </p>
-
-            <h1 class="display-5 fw-bold">
-                {{ shop.name }}
-            </h1>
-
-            <p class="mb-0">
-                Huong vi ca phe, khong gian thu gian
-            </p>
-        </section>
-
-        <div class="row g-4">
-
-            <!-- Thong tin quan -->
-            <div class="col-12 col-md-6">
-                <div class="card shop-card shadow-sm h-100">
-                    <div class="card-body p-4">
-
-                        <h2 class="section-title h4 mb-4">
-                            Thong tin quan
-                        </h2>
-
-                        <div class="mb-4">
-                            <div class="info-label">
-                                Dia chi
-                            </div>
-
-                            <div class="info-value">
-                                {{ shop.address }}
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="info-label">
-                                Gio mo cua
-                            </div>
-
-                            <div class="info-value">
-                                {{ shop.open }}:00 -
-                                {{ shop.close }}:00
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="info-label">
-                                Gio dang kiem tra
-                            </div>
-
-                            <div class="info-value">
-                                {{ "%02d"|format(gio) }}:00
-                            </div>
-                        </div>
-
-                        {% if dang_mo %}
-                            <div class="alert alert-success mb-0">
-                                <strong>Quan dang mo cua</strong>
-                                <p class="mb-0 mt-1">
-                                    Rat vui duoc phuc vu ban!
-                                </p>
-                            </div>
-                        {% else %}
-                            <div class="alert alert-danger mb-0">
-                                <strong>Quan da dong cua</strong>
-                                <p class="mb-0 mt-1">
-                                    Hen gap ban vao gio mo cua.
-                                </p>
-                            </div>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- Danh sach khuyen mai -->
-            <div class="col-12 col-md-6">
-                <div class="card shop-card shadow-sm h-100">
-                    <div class="card-body p-4">
-
-                        <h2 class="section-title h4 mb-4">
-                            Khuyen mai
-                        </h2>
-
-                        {% if khuyen_mai == ["Hien chua co khuyen mai."] %}
-                            <div class="alert alert-info mb-0">
-                                {{ khuyen_mai[0] }}
-                            </div>
-                        {% else %}
-                            <ul class="list-group list-group-flush">
-                                {% for km in khuyen_mai %}
-                                    <li class="list-group-item promotion-item">
-                                        <span class="badge text-bg-success me-2">
-                                            {{ loop.index }}
-                                        </span>
-
-                                        {{ km }}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-
+        <div class="formula">
+            <strong>Công thức tính điểm:</strong><br>
+            Điểm học phần = CC × 10% + GK × 30% + CK × 60%<br>
+            <strong>Xếp loại:</strong> A, B, C, D hoặc F
         </div>
 
-        <!-- Khu vuc kiem tra gio -->
-        <section class="card shop-card shadow-sm mt-4">
-            <div class="card-body p-4">
+        <form method="POST">
+            <div class="form-group">
+                <label for="cc">
+                    Điểm chuyên cần (10%)
+                </label>
 
-                <h2 class="section-title h4">
-                    Kiem tra trang thai quan
-                </h2>
+                <input
+                    type="text"
+                    id="cc"
+                    name="cc"
+                    value="{{ values.cc }}"
+                    placeholder="Nhập điểm từ 0 đến 10"
+                >
 
-                <p class="text-secondary">
-                    Chon mot moc gio de kiem tra trang thai mo cua.
+                {% if errors.cc %}
+                    <div class="error">{{ errors.cc }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="gk">
+                    Điểm giữa kỳ (30%)
+                </label>
+
+                <input
+                    type="text"
+                    id="gk"
+                    name="gk"
+                    value="{{ values.gk }}"
+                    placeholder="Nhập điểm từ 0 đến 10"
+                >
+
+                {% if errors.gk %}
+                    <div class="error">{{ errors.gk }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="ck">
+                    Điểm cuối kỳ (60%)
+                </label>
+
+                <input
+                    type="text"
+                    id="ck"
+                    name="ck"
+                    value="{{ values.ck }}"
+                    placeholder="Nhập điểm từ 0 đến 10"
+                >
+
+                {% if errors.ck %}
+                    <div class="error">{{ errors.ck }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit">
+                Tính điểm học phần
+            </button>
+        </form>
+
+        {% if result is not none %}
+            <div class="result">
+                <h2>Kết quả tính điểm</h2>
+
+                <p>
+                    Điểm học phần:
+                    <strong>{{ "%.1f"|format(result) }}</strong>
                 </p>
 
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="/?gio=7"
-                       class="btn btn-outline-success">
-                        07:00
-                    </a>
+                <p>
+                    Điểm chữ:
+                    <strong>{{ letter }}</strong>
+                </p>
 
-                    <a href="/?gio=9"
-                       class="btn btn-outline-success">
-                        09:00
-                    </a>
-
-                    <a href="/?gio=12"
-                       class="btn btn-outline-success">
-                        12:00
-                    </a>
-
-                    <a href="/?gio=21"
-                       class="btn btn-outline-success">
-                        21:00
-                    </a>
-
-                    <a href="/?gio=22"
-                       class="btn btn-outline-danger">
-                        22:00
-                    </a>
-
-                    <a href="/?gio=23"
-                       class="btn btn-outline-danger">
-                        23:00
-                    </a>
-
-                    <a href="/"
-                       class="btn btn-success">
-                        Gio hien tai
-                    </a>
-                </div>
-
+                {% if warning %}
+                    <p class="warning">{{ warning }}</p>
+                {% endif %}
             </div>
-        </section>
+        {% endif %}
 
-    </main>
-
-    <!-- Chan trang -->
-    <footer class="text-center py-4">
-        <div class="container">
-            <p class="mb-1">
-                &copy; 2026 Song Huong Coffee
-            </p>
-
-            <small>
-                Xay dung bang Flask, Jinja2 va Bootstrap
-            </small>
+        <div class="note">
+            Điểm nhập từ 0 đến 10. Có thể sử dụng dấu phẩy
+            hoặc dấu chấm thập phân. Điểm cuối kỳ dưới 1
+            được xếp loại F.
         </div>
-    </footer>
-
-    <!-- Bootstrap JavaScript -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
-    </script>
-
+    </div>
 </body>
 </html>
