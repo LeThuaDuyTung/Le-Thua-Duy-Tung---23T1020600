@@ -1,0 +1,94 @@
+
+{% extends "base.html" %}
+
+{% block title %}Truy vấn sinh viên{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <h1>Kết quả truy vấn SQLAlchemy</h1>
+
+    <p><strong>1. Tìm sinh viên ID = 3:</strong>
+        {{ student_3 if student_3 else "Không tìm thấy" }}
+    </p>
+
+    <p><strong>2. Tìm sinh viên ID = 99:</strong>
+        {{ student_99 if student_99 else "None - Không tìm thấy" }}
+    </p>
+
+    <p><strong>3. Tổng số sinh viên:</strong>
+        {{ count }}
+    </p>
+
+    <p><strong>4. Sinh viên có GPA từ 8 trở lên:</strong></p>
+
+    <ul>
+        {% for sv in good %}
+            <li>{{ sv.name }} - GPA: {{ sv.gpa }}</li>
+        {% else %}
+            <li>Không có sinh viên phù hợp.</li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>5. Tìm theo MSSV 23T1020002:</strong>
+        {{ binh if binh else "Không tìm thấy" }}
+    </p>
+
+    <p><strong>6. Điểm GPA trung bình:</strong>
+        {{ "%.2f"|format(avg) if avg is not none else "Chưa có dữ liệu" }}
+    </p>
+
+    <a href="/" class="btn">Quay về trang chủ</a>
+
+</div>
+
+<div class="card">
+
+    <h2>Bảng danh sách toàn bộ sinh viên</h2>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>MSSV</th>
+                    <th>Họ và tên</th>
+                    <th>GPA</th>
+                    <th>Score</th>
+                    <th>Tuổi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for sv in students %}
+
+                <tr>
+                    <td>{{ sv.id }}</td>
+                    <td>{{ sv.mssv }}</td>
+                    <td>{{ sv.name }}</td>
+                    <td>{{ sv.gpa if sv.gpa is not none else "-" }}</td>
+                    <td>{{ sv.score if sv.score is not none else "-" }}</td>
+                    <td>{{ sv.age }}</td>
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="6">Chưa có dữ liệu sinh viên.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
