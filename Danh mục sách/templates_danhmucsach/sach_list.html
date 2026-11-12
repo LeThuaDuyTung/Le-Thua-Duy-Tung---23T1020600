@@ -1,0 +1,102 @@
+
+{% extends "base.html" %}
+
+{% block title %}Quản lý sách{% endblock %}
+
+{% block content %}
+
+<h1>Quản lý sách</h1>
+<p class="subtitle">Quản lý thông tin sách theo từng danh mục.</p>
+
+<div class="card">
+
+    <a href="{{ url_for('sach_add') }}" class="btn btn-primary">
+        + Thêm sách mới
+    </a>
+
+    <br><br>
+
+    <form method="GET" action="{{ url_for('sach_list') }}"
+          class="filter-form">
+
+        <select name="danh_muc_id">
+            <option value="">-- Tất cả danh mục --</option>
+
+            {% for dm in danh_muc_list %}
+            <option value="{{ dm.id }}"
+                {% if danh_muc_id == dm.id %}selected{% endif %}>
+                {{ dm.ten_danh_muc }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            Lọc
+        </button>
+
+        <a href="{{ url_for('sach_list') }}"
+           class="btn btn-secondary">
+            Làm mới
+        </a>
+
+    </form>
+
+    {% if sach_list %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên sách</th>
+                <th>Tác giả</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for sach in sach_list %}
+            <tr>
+                <td>{{ sach.id }}</td>
+                <td>{{ sach.ten_sach }}</td>
+                <td>{{ sach.tac_gia }}</td>
+                <td>{{ sach.danh_muc.ten_danh_muc }}</td>
+                <td>{{ sach.gia|vnd }}</td>
+                <td>{{ sach.so_luong }}</td>
+
+                <td class="actions">
+
+                    <a href="{{ url_for('sach_edit', id=sach.id) }}"
+                       class="btn btn-warning">
+                        Sửa
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('sach_delete', id=sach.id) }}"
+                          style="display:inline"
+                          onsubmit="return confirm('Bạn có chắc muốn xóa sách này?')">
+
+                        <button type="submit" class="btn btn-danger">
+                            Xóa
+                        </button>
+
+                    </form>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+        <p>Không tìm thấy sách nào trong danh mục này.</p>
+    {% endif %}
+
+</div>
+
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+    Quay lại Dashboard
+</a>
+
+{% endblock %}

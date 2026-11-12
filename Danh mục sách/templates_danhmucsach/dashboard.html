@@ -1,0 +1,112 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Quản lý sách{% endblock %}
+
+{% block content %}
+
+<h1>Dashboard quản lý sách</h1>
+<p class="subtitle">
+    Tổng quan hệ thống quản lý danh mục và sách.
+</p>
+
+<div class="stats">
+
+    <div class="stat-card">
+        <p>Tổng danh mục</p>
+        <h2>{{ tong_danh_muc }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <p>Tổng đầu sách</p>
+        <h2>{{ tong_sach }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <p>Tổng số lượng sách</p>
+        <h2>{{ tong_so_luong }}</h2>
+    </div>
+
+</div>
+
+<div class="card">
+    <h2>Danh sách danh mục</h2>
+
+    <a href="{{ url_for('danhmuc_add') }}" class="btn btn-primary">
+        + Thêm danh mục
+    </a>
+
+    <a href="{{ url_for('danhmuc_list') }}" class="btn btn-secondary">
+        Xem tất cả
+    </a>
+
+    <br><br>
+
+    {% if danh_muc_list %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Số đầu sách</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for dm in danh_muc_list %}
+            <tr>
+                <td>{{ dm.id }}</td>
+                <td>{{ dm.ten_danh_muc }}</td>
+                <td>{{ dm.sach_list|length }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Chưa có danh mục nào.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>5 sách mới thêm gần đây</h2>
+
+    <a href="{{ url_for('sach_add') }}" class="btn btn-success">
+        + Thêm sách
+    </a>
+
+    <a href="{{ url_for('sach_list') }}" class="btn btn-secondary">
+        Xem tất cả
+    </a>
+
+    <br><br>
+
+    {% if sach_moi %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên sách</th>
+                <th>Tác giả</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for sach in sach_moi %}
+            <tr>
+                <td>{{ sach.id }}</td>
+                <td>{{ sach.ten_sach }}</td>
+                <td>{{ sach.tac_gia }}</td>
+                <td>{{ sach.danh_muc.ten_danh_muc }}</td>
+                <td>{{ sach.gia|vnd }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Chưa có sách nào trong hệ thống.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

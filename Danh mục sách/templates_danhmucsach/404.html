@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+
+{% block title %}Không tìm thấy trang{% endblock %}
+
+{% block content %}
+
+<div class="card" style="text-align:center; padding:60px 20px;">
+
+    <h1 style="font-size:70px;">404</h1>
+
+    <h2>Không tìm thấy trang!</h2>
+
+    <p>Trang bạn đang truy cập không tồn tại hoặc đã bị xóa.</p>
+
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+        Quay lại Dashboard
+    </a>
+
+</div>
+
+{% endblock %}

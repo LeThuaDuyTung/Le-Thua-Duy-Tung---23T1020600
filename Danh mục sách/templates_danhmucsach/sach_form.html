@@ -1,0 +1,103 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ action }} sách{% endblock %}
+
+{% block content %}
+
+<h1>{{ action }} sách</h1>
+<p class="subtitle">Nhập thông tin chi tiết của sách.</p>
+
+<div class="card">
+
+    <form method="POST">
+
+        <div class="form-group">
+            <label for="ten_sach">Tên sách *</label>
+
+            <input
+                type="text"
+                id="ten_sach"
+                name="ten_sach"
+                placeholder="Nhập tên sách"
+                value="{{ sach.ten_sach if sach else '' }}"
+                maxlength="150"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="tac_gia">Tác giả *</label>
+
+            <input
+                type="text"
+                id="tac_gia"
+                name="tac_gia"
+                placeholder="Nhập tên tác giả"
+                value="{{ sach.tac_gia if sach else '' }}"
+                maxlength="100"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="gia">Giá sách (VNĐ) *</label>
+
+            <input
+                type="number"
+                id="gia"
+                name="gia"
+                min="0"
+                step="1000"
+                placeholder="Ví dụ: 100000"
+                value="{{ sach.gia if sach else '' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="so_luong">Số lượng *</label>
+
+            <input
+                type="number"
+                id="so_luong"
+                name="so_luong"
+                min="0"
+                placeholder="Nhập số lượng"
+                value="{{ sach.so_luong if sach else 0 }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="danh_muc_id">Danh mục sách *</label>
+
+            <select id="danh_muc_id" name="danh_muc_id" required>
+
+                <option value="">-- Chọn danh mục --</option>
+
+                {% for dm in danh_muc_list %}
+                <option value="{{ dm.id }}"
+                    {% if sach and sach.danh_muc_id == dm.id %}
+                        selected
+                    {% endif %}>
+                    {{ dm.ten_danh_muc }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Lưu thông tin
+        </button>
+
+        <a href="{{ url_for('sach_list') }}" class="btn btn-secondary">
+            Hủy
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

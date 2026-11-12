@@ -1,0 +1,51 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ action }} danh mục{% endblock %}
+
+{% block content %}
+
+<h1>{{ action }} danh mục sách</h1>
+<p class="subtitle">Nhập thông tin danh mục sách.</p>
+
+<div class="card">
+
+    <form method="POST">
+
+        <div class="form-group">
+            <label for="ten_danh_muc">Tên danh mục *</label>
+
+            <input
+                type="text"
+                id="ten_danh_muc"
+                name="ten_danh_muc"
+                placeholder="Ví dụ: Công nghệ thông tin"
+                value="{{ danh_muc.ten_danh_muc if danh_muc else '' }}"
+                required
+                maxlength="100"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="mo_ta">Mô tả</label>
+
+            <textarea
+                id="mo_ta"
+                name="mo_ta"
+                placeholder="Nhập mô tả danh mục..."
+            >{{ danh_muc.mo_ta if danh_muc and danh_muc.mo_ta else '' }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Lưu thông tin
+        </button>
+
+        <a href="{{ url_for('danhmuc_list') }}" class="btn btn-secondary">
+            Hủy
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

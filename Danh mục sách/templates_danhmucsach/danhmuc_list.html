@@ -1,0 +1,73 @@
+
+{% extends "base.html" %}
+
+{% block title %}Danh mục sách{% endblock %}
+
+{% block content %}
+
+<h1>Quản lý danh mục sách</h1>
+<p class="subtitle">Thêm, xem, sửa và xóa các danh mục sách.</p>
+
+<div class="card">
+
+    <a href="{{ url_for('danhmuc_add') }}" class="btn btn-primary">
+        + Thêm danh mục mới
+    </a>
+
+    <br><br>
+
+    {% if danh_muc_list %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Mô tả</th>
+                <th>Số đầu sách</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for dm in danh_muc_list %}
+            <tr>
+                <td>{{ dm.id }}</td>
+                <td>{{ dm.ten_danh_muc }}</td>
+                <td>{{ dm.mo_ta or "Chưa có mô tả" }}</td>
+                <td>{{ dm.sach_list|length }}</td>
+
+                <td class="actions">
+
+                    <a href="{{ url_for('danhmuc_edit', id=dm.id) }}"
+                       class="btn btn-warning">
+                        Sửa
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('danhmuc_delete', id=dm.id) }}"
+                          style="display:inline"
+                          onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?')">
+
+                        <button type="submit" class="btn btn-danger">
+                            Xóa
+                        </button>
+
+                    </form>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+        <p>Chưa có danh mục sách nào. Hãy thêm danh mục đầu tiên!</p>
+    {% endif %}
+
+</div>
+
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+    Quay lại Dashboard
+</a>
+
+{% endblock %}
