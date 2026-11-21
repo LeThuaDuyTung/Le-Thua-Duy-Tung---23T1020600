@@ -1,0 +1,180 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}
+    {% if book %}Sửa sách{% else %}Thêm sách{% endif %}
+{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-heading">
+    <div>
+        <h1>{% if book %}Cập nhật sách{% else %}Thêm sách mới{% endif %}</h1>
+        <p>Nhập đầy đủ thông tin sách bên dưới.</p>
+    </div>
+
+    <a href="{{ url_for('admin_books') }}" class="btn btn-light">
+        Quay lại
+    </a>
+</div>
+
+<section class="admin-card form-card">
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        action="{% if book %}{{ url_for('admin_book_form', book_id=book.id) }}{% else %}{{ url_for('admin_book_form') }}{% endif %}"
+    >
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="form-group">
+            <label for="title">Tên sách *</label>
+            <input
+                class="form-control"
+                type="text"
+                id="title"
+                name="title"
+                required
+                value="{{ values.get('title', book.title if book else '') }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="author">Tác giả *</label>
+            <input
+                class="form-control"
+                type="text"
+                id="author"
+                name="author"
+                required
+                value="{{ values.get('author', book.author if book else '') }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="publisher">Nhà xuất bản</label>
+            <input
+                class="form-control"
+                type="text"
+                id="publisher"
+                name="publisher"
+                value="{{ values.get('publisher', book.publisher if book else '') }}"
+            >
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-group">
+                <label for="publication_year">Năm xuất bản</label>
+                <input
+                    class="form-control"
+                    type="number"
+                    id="publication_year"
+                    name="publication_year"
+                    min="1900"
+                    max="{{ now.year }}"
+                    value="{{ values.get('publication_year', book.publication_year if book and book.publication_year else '') }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="price">Giá bán (VNĐ) *</label>
+                <input
+                    class="form-control"
+                    type="number"
+                    id="price"
+                    name="price"
+                    min="1000"
+                    required
+                    value="{{ values.get('price', book.price if book else '') }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="stock">Số lượng tồn kho *</label>
+                <input
+                    class="form-control"
+                    type="number"
+                    id="stock"
+                    name="stock"
+                    min="0"
+                    required
+                    value="{{ values.get('stock', book.stock if book else 0) }}"
+                >
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="category_id">Danh mục *</label>
+
+            <select class="form-control" id="category_id" name="category_id" required>
+
+                <option value="">-- Chọn danh mục --</option>
+
+                {% for category in categories %}
+
+                    {% set selected_id = values.get('category_id', book.category_id if book else '') %}
+
+                    <option
+                        value="{{ category.id }}"
+                        {% if selected_id|string == category.id|string %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ category.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Mô tả</label>
+            <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                rows="5"
+            >{{ values.get('description', book.description if book else '') }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="cover_image">Ảnh bìa sách</label>
+            <input
+                class="form-control"
+                type="file"
+                id="cover_image"
+                name="cover_image"
+                accept=".jpg,.jpeg,.png,.webp"
+            >
+
+            <small>Chấp nhận JPG, JPEG, PNG hoặc WEBP.</small>
+
+            {% if book and book.cover_image %}
+                <div class="current-cover">
+                    <p>Ảnh hiện tại:</p>
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + book.cover_image) }}"
+                        alt="{{ book.title }}"
+                    >
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                Lưu thông tin
+            </button>
+
+            <a href="{{ url_for('admin_books') }}" class="btn btn-light">
+                Hủy
+            </a>
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}

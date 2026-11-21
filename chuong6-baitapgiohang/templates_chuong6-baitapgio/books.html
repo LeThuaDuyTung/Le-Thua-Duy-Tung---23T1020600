@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Danh sách sách - Nhà sách Sông Hương{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div>
+        <p class="hero-label">NHÀ SÁCH SÔNG HƯƠNG</p>
+        <h1>Khám phá thế giới tri thức</h1>
+        <p>Tìm kiếm những cuốn sách phù hợp với hành trình của bạn.</p>
+    </div>
+</section>
+
+<section class="section">
+
+    <div class="section-heading">
+        <div>
+            <h2>Danh sách sách</h2>
+            <p>Khám phá các đầu sách hiện có tại cửa hàng.</p>
+        </div>
+    </div>
+
+    <form method="GET" action="{{ url_for('books') }}" class="filter-form">
+
+        <input
+            type="text"
+            name="keyword"
+            placeholder="Tìm theo tên sách hoặc tác giả..."
+            value="{{ keyword }}"
+        >
+
+        <select name="category_id">
+            <option value="">Tất cả danh mục</option>
+
+            {% for category in categories %}
+                <option
+                    value="{{ category.id }}"
+                    {% if selected_category|string == category.id|string %}
+                        selected
+                    {% endif %}
+                >
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            Tìm kiếm
+        </button>
+
+        <a href="{{ url_for('books') }}" class="btn btn-light">
+            Làm mới
+        </a>
+
+    </form>
+
+    {% if books %}
+
+        <div class="book-grid">
+
+            {% for book in books %}
+
+                <article class="book-card">
+
+                    <a href="{{ url_for('book_detail', book_id=book.id) }}"
+                       class="book-cover">
+
+                        {% if book.cover_image %}
+                            <img
+                                src="{{ url_for('static', filename='uploads/' + book.cover_image) }}"
+                                alt="{{ book.title }}"
+                            >
+                        {% else %}
+                            <div class="no-cover">
+                                <span>📖</span>
+                                <p>Chưa có ảnh</p>
+                            </div>
+                        {% endif %}
+
+                    </a>
+
+                    <div class="book-info">
+
+                        <span class="category-tag">
+                            {{ book.category.name }}
+                        </span>
+
+                        <h3>
+                            <a href="{{ url_for('book_detail', book_id=book.id) }}">
+                                {{ book.title }}
+                            </a>
+                        </h3>
+
+                        <p class="book-author">
+                            Tác giả: {{ book.author }}
+                        </p>
+
+                        <p class="book-price">
+                            {{ "{:,.0f}".format(book.price) }} đ
+                        </p>
+
+                        <p class="stock">
+                            {% if book.stock > 0 %}
+                                Còn {{ book.stock }} cuốn
+                            {% else %}
+                                <span class="out-stock">Hết hàng</span>
+                            {% endif %}
+                        </p>
+
+                        <a
+                            href="{{ url_for('book_detail', book_id=book.id) }}"
+                            class="btn btn-primary btn-block"
+                        >
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <h3>Không tìm thấy sách</h3>
+            <p>Thử thay đổi từ khóa hoặc danh mục tìm kiếm.</p>
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

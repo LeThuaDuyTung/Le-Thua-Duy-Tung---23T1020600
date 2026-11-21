@@ -1,0 +1,147 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Quản lý danh mục{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-heading">
+    <div>
+        <h1>Quản lý danh mục</h1>
+        <p>Thêm mới, chỉnh sửa và xóa danh mục sách.</p>
+    </div>
+</div>
+
+<div class="category-admin-layout">
+
+    <section class="admin-card">
+
+        <h2>
+            {% if editing %}
+                Chỉnh sửa danh mục
+            {% else %}
+                Thêm danh mục mới
+            {% endif %}
+        </h2>
+
+        <form method="POST" action="{{ url_for('admin_categories') }}">
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            {% if editing %}
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="category_id" value="{{ editing.id }}">
+            {% else %}
+                <input type="hidden" name="action" value="add">
+            {% endif %}
+
+            <div class="form-group">
+                <label for="name">Tên danh mục *</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    required
+                    value="{{ editing.name if editing else '' }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô tả</label>
+                <textarea
+                    class="form-control"
+                    id="description"
+                    name="description"
+                    rows="4"
+                >{{ editing.description if editing else '' }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                {% if editing %}Cập nhật{% else %}Thêm danh mục{% endif %}
+            </button>
+
+            {% if editing %}
+                <a href="{{ url_for('admin_categories') }}" class="btn btn-light">
+                    Hủy sửa
+                </a>
+            {% endif %}
+
+        </form>
+
+    </section>
+
+    <section class="admin-card">
+
+        <h2>Danh sách danh mục</h2>
+
+        <div class="table-responsive">
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên danh mục</th>
+                        <th>Số sách</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for category, count in category_counts %}
+
+                        <tr>
+                            <td>{{ category.id }}</td>
+                            <td>
+                                <strong>{{ category.name }}</strong>
+                                <small class="table-description">
+                                    {{ category.description or '' }}
+                                </small>
+                            </td>
+                            <td>{{ count }}</td>
+
+                            <td>
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for('admin_categories', edit=category.id) }}"
+                                        class="action-edit"
+                                    >
+                                        Sửa
+                                    </a>
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('admin_category_delete', category_id=category.id) }}"
+                                        onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?')"
+                                    >
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="action-delete">
+                                            Xóa
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                Chưa có danh mục.
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}Giỏ hàng - Nhà sách Sông Hương{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="section-heading">
+        <div>
+            <h1>Giỏ hàng của bạn</h1>
+            <p>Kiểm tra sách và số lượng trước khi thanh toán.</p>
+        </div>
+    </div>
+
+    {% if items %}
+
+        <div class="cart-layout">
+
+            <div class="cart-list">
+
+                {% for item in items %}
+
+                    <div class="cart-item">
+
+                        <div class="cart-item-image">
+
+                            {% if item.book.cover_image %}
+                                <img
+                                    src="{{ url_for('static', filename='uploads/' + item.book.cover_image) }}"
+                                    alt="{{ item.book.title }}"
+                                >
+                            {% else %}
+                                <div class="no-cover">📖</div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="cart-item-info">
+
+                            <h3>{{ item.book.title }}</h3>
+
+                            <p>{{ item.book.author }}</p>
+
+                            <p class="book-price">
+                                {{ "{:,.0f}".format(item.book.price) }} đ
+                            </p>
+
+                            <div class="quantity-controls">
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('cart_decrease', book_id=item.book.id) }}"
+                                >
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit">−</button>
+                                </form>
+
+                                <span>{{ item.quantity }}</span>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('cart_increase', book_id=item.book.id) }}"
+                                >
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit">+</button>
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                        <div class="cart-item-total">
+
+                            <strong>
+                                {{ "{:,.0f}".format(item.line_total) }} đ
+                            </strong>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('cart_remove', book_id=item.book.id) }}"
+                                onsubmit="return confirm('Bạn có muốn xóa sách này?')"
+                            >
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="remove-btn">
+                                    Xóa
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for('cart_clear') }}"
+                    onsubmit="return confirm('Bạn có muốn xóa toàn bộ giỏ hàng?')"
+                >
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-light">
+                        Xóa toàn bộ giỏ hàng
+                    </button>
+                </form>
+
+            </div>
+
+            <aside class="cart-summary">
+
+                <h2>Tổng đơn hàng</h2>
+
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <strong>{{ "{:,.0f}".format(subtotal) }} đ</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <strong>
+                        {% if subtotal >= 200000 %}
+                            Miễn phí
+                        {% else %}
+                            20.000 đ
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="summary-note">
+                    {% if subtotal >= 200000 %}
+                        Bạn đã được miễn phí vận chuyển.
+                    {% else %}
+                        Mua thêm {{ "{:,.0f}".format(200000 - subtotal) }} đ
+                        để được miễn phí vận chuyển.
+                    {% endif %}
+                </div>
+
+                <a href="{{ url_for('checkout') }}"
+                   class="btn btn-primary btn-block">
+                    Tiến hành thanh toán
+                </a>
+
+                <a href="{{ url_for('books') }}"
+                   class="btn btn-light btn-block">
+                    Tiếp tục mua sắm
+                </a>
+
+            </aside>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <h2>Giỏ hàng đang trống</h2>
+            <p>Hãy chọn những cuốn sách bạn yêu thích.</p>
+
+            <a href="{{ url_for('books') }}" class="btn btn-primary">
+                Khám phá sách
+            </a>
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

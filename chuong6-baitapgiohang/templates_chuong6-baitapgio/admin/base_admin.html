@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <h2>Quản trị</h2>
+
+        <a href="{{ url_for('admin_dashboard') }}">Tổng quan</a>
+        <a href="{{ url_for('admin_books') }}">Quản lý sách</a>
+        <a href="{{ url_for('admin_categories') }}">Quản lý danh mục</a>
+        <a href="{{ url_for('admin_orders') }}">
+            Quản lý đơn hàng
+            {% if pending_orders > 0 %}
+                <span class="sidebar-count">{{ pending_orders }}</span>
+            {% endif %}
+        </a>
+
+        <hr>
+
+        <a href="{{ url_for('books') }}">Quay lại cửa hàng</a>
+    </aside>
+
+    <section class="admin-main">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block admin_content %}{% endblock %}
+
+    </section>
+
+</div>
+
+{% endblock %}

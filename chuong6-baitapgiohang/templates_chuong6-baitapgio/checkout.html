@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Thanh toán - Nhà sách Sông Hương{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="section-heading">
+        <div>
+            <h1>Thông tin thanh toán</h1>
+            <p>Vui lòng nhập thông tin nhận hàng chính xác.</p>
+        </div>
+    </div>
+
+    <div class="checkout-layout">
+
+        <div class="checkout-form-card">
+
+            <h2>Thông tin khách hàng</h2>
+
+            <form method="POST" action="{{ url_for('checkout') }}">
+
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    {{ form.customer_name.label }}
+                    {{ form.customer_name(class="form-control", placeholder="Nhập họ và tên") }}
+
+                    {% for error in form.customer_name.errors %}
+                        <small class="field-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.phone.label }}
+                    {{ form.phone(class="form-control", placeholder="Nhập số điện thoại") }}
+
+                    {% for error in form.phone.errors %}
+                        <small class="field-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(class="form-control", placeholder="example@gmail.com") }}
+
+                    {% for error in form.email.errors %}
+                        <small class="field-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.address.label }}
+                    {{ form.address(class="form-control", rows="3", placeholder="Nhập địa chỉ nhận hàng") }}
+
+                    {% for error in form.address.errors %}
+                        <small class="field-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.note.label }}
+                    {{ form.note(class="form-control", rows="3", placeholder="Ghi chú thêm nếu có") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.payment_method.label }}
+                    {{ form.payment_method(class="form-control") }}
+                </div>
+
+                {{ form.submit(class="btn btn-primary btn-block") }}
+
+            </form>
+
+        </div>
+
+        <aside class="cart-summary">
+
+            <h2>Đơn hàng của bạn</h2>
+
+            {% for item in items %}
+
+                <div class="summary-product">
+                    <div>
+                        <strong>{{ item.book.title }}</strong>
+                        <small>Số lượng: {{ item.quantity }}</small>
+                    </div>
+
+                    <span>
+                        {{ "{:,.0f}".format(item.line_total) }} đ
+                    </span>
+                </div>
+
+            {% endfor %}
+
+            <div class="summary-row">
+                <span>Tạm tính</span>
+                <strong>{{ "{:,.0f}".format(subtotal) }} đ</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Phí vận chuyển</span>
+                <strong>
+                    {% if shipping_fee == 0 %}
+                        Miễn phí
+                    {% else %}
+                        {{ "{:,.0f}".format(shipping_fee) }} đ
+                    {% endif %}
+                </strong>
+            </div>
+
+            <div class="summary-total">
+                <span>Tổng thanh toán</span>
+                <strong>{{ "{:,.0f}".format(total) }} đ</strong>
+            </div>
+
+        </aside>
+
+    </div>
+
+</section>
+
+{% endblock %}

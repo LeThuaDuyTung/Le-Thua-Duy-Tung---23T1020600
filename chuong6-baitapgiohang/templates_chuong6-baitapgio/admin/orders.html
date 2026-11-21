@@ -1,0 +1,136 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Quản lý đơn hàng{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-heading">
+    <div>
+        <h1>Quản lý đơn hàng</h1>
+        <p>Theo dõi và cập nhật trạng thái đơn hàng.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <span>Tổng đơn hàng</span>
+        <strong>{{ total_count }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Đơn đang lọc</span>
+        <strong>{{ filtered_count }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Tổng tiền đang lọc</span>
+        <strong>{{ "{:,.0f}".format(filtered_total) }} đ</strong>
+    </div>
+
+</div>
+
+<form method="GET" class="filter-form admin-filter">
+
+    <input
+        type="text"
+        name="keyword"
+        placeholder="Tên khách hàng, số điện thoại hoặc mã đơn..."
+        value="{{ keyword }}"
+    >
+
+    <select name="status">
+        <option value="">Tất cả trạng thái</option>
+
+        {% for item_status in statuses %}
+            <option
+                value="{{ item_status }}"
+                {% if status == item_status %}selected{% endif %}
+            >
+                {{ item_status }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary">Lọc</button>
+    <a href="{{ url_for('admin_orders') }}" class="btn btn-light">Làm mới</a>
+
+</form>
+
+<section class="admin-card">
+
+    <div class="table-responsive">
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Số điện thoại</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for order in pagination.items %}
+
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.phone }}</td>
+                        <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ "{:,.0f}".format(order.total) }} đ</td>
+                        <td>
+                            <span class="status-badge">
+                                {{ order.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin_order_detail', order_id=order.id) }}">
+                                Xem chi tiết
+                            </a>
+                        </td>
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            Không tìm thấy đơn hàng.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="pagination">
+
+        {% if pagination.has_prev %}
+            <a href="{{ url_for('admin_orders', page=pagination.prev_num, status=status, keyword=keyword) }}">
+                ← Trước
+            </a>
+        {% endif %}
+
+        <span>
+            Trang {{ pagination.page }} / {{ pagination.pages or 1 }}
+        </span>
+
+        {% if pagination.has_next %}
+            <a href="{{ url_for('admin_orders', page=pagination.next_num, status=status, keyword=keyword) }}">
+                Sau →
+            </a>
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Đặt hàng thành công{% endblock %}
+
+{% block content %}
+
+<section class="success-page">
+
+    <div class="success-icon">✓</div>
+
+    <h1>Đặt hàng thành công!</h1>
+
+    <p>Cảm ơn bạn đã mua sắm tại Nhà sách Sông Hương.</p>
+
+    <div class="order-success-card">
+
+        <h2>Thông tin đơn hàng #{{ order.id }}</h2>
+
+        <p><strong>Khách hàng:</strong> {{ order.customer_name }}</p>
+        <p><strong>Số điện thoại:</strong> {{ order.phone }}</p>
+        <p><strong>Địa chỉ:</strong> {{ order.address }}</p>
+        <p><strong>Thanh toán:</strong> {{ order.payment_method }}</p>
+        <p><strong>Trạng thái:</strong> {{ order.status }}</p>
+
+        <hr>
+
+        <h3>Sách đã đặt</h3>
+
+        {% for item in order.items %}
+
+            <div class="summary-product">
+                <div>
+                    <strong>{{ item.book.title }}</strong>
+                    <small>{{ item.quantity }} × {{ "{:,.0f}".format(item.unit_price) }} đ</small>
+                </div>
+
+                <span>
+                    {{ "{:,.0f}".format(item.quantity * item.unit_price) }} đ
+                </span>
+            </div>
+
+        {% endfor %}
+
+        <hr>
+
+        <div class="summary-row">
+            <span>Tạm tính</span>
+            <strong>{{ "{:,.0f}".format(order.subtotal) }} đ</strong>
+        </div>
+
+        <div class="summary-row">
+            <span>Phí vận chuyển</span>
+            <strong>{{ "{:,.0f}".format(order.shipping_fee) }} đ</strong>
+        </div>
+
+        <div class="summary-total">
+            <span>Tổng thanh toán</span>
+            <strong>{{ "{:,.0f}".format(order.total) }} đ</strong>
+        </div>
+
+    </div>
+
+    <a href="{{ url_for('books') }}" class="btn btn-primary">
+        Tiếp tục mua sắm
+    </a>
+
+</section>
+
+{% endblock %}

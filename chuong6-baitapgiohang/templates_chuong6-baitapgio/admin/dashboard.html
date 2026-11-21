@@ -1,0 +1,133 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Tổng quan quản trị{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-heading">
+    <div>
+        <h1>Tổng quan</h1>
+        <p>Thống kê hoạt động của Nhà sách Sông Hương.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <span>Tổng số sách</span>
+        <strong>{{ book_count }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Đơn chờ xác nhận</span>
+        <strong>{{ pending_count }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Doanh thu tháng</span>
+        <strong>{{ "{:,.0f}".format(month_revenue) }} đ</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Sách sắp hết hàng</span>
+        <strong>{{ low_stock_count }}</strong>
+    </div>
+
+</div>
+
+<section class="admin-card">
+
+    <div class="admin-card-heading">
+        <h2>Đơn hàng mới nhất</h2>
+        <a href="{{ url_for('admin_orders') }}">Xem tất cả</a>
+    </div>
+
+    {% if latest_orders %}
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in latest_orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.customer_name }}</td>
+                            <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>{{ "{:,.0f}".format(order.total) }} đ</td>
+                            <td>
+                                <span class="status-badge">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin_order_detail', order_id=order.id) }}">
+                                    Xem
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <p>Chưa có đơn hàng nào.</p>
+    {% endif %}
+
+</section>
+
+<section class="admin-card">
+
+    <h2>Sách có số lượng tồn thấp</h2>
+
+    {% if low_stock_books %}
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tên sách</th>
+                        <th>Danh mục</th>
+                        <th>Tồn kho</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for book in low_stock_books %}
+                        <tr>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.category.name }}</td>
+                            <td>
+                                <span class="stock-warning">
+                                    {{ book.stock }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin_book_form', book_id=book.id) }}">
+                                    Cập nhật
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <p>Không có sách nào sắp hết hàng.</p>
+    {% endif %}
+
+</section>
+
+{% endblock %}

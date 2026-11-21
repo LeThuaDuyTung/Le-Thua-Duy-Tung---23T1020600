@@ -1,0 +1,198 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Chi tiết đơn hàng #{{ order.id }}{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-heading">
+    <div>
+        <h1>Đơn hàng #{{ order.id }}</h1>
+        <p>Thông tin khách hàng, sản phẩm và trạng thái đơn hàng.</p>
+    </div>
+
+    <a href="{{ url_for('admin_orders') }}" class="btn btn-light">
+        Quay lại
+    </a>
+</div>
+
+<div class="order-detail-grid">
+
+    <section class="admin-card">
+
+        <h2>Thông tin khách hàng</h2>
+
+        <div class="detail-row">
+            <span>Họ tên</span>
+            <strong>{{ order.customer_name }}</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Số điện thoại</span>
+            <strong>{{ order.phone }}</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Email</span>
+            <strong>{{ order.email or 'Không có' }}</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Địa chỉ</span>
+            <strong>{{ order.address }}</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Ghi chú</span>
+            <strong>{{ order.note or 'Không có' }}</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Phương thức thanh toán</span>
+            <strong>{{ order.payment_method }}</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Ngày đặt</span>
+            <strong>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Trạng thái</span>
+            <strong>{{ order.status }}</strong>
+        </div>
+
+    </section>
+
+    <section class="admin-card">
+
+        <h2>Sản phẩm trong đơn</h2>
+
+        <div class="table-responsive">
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Sách</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in order.items %}
+
+                        <tr>
+                            <td>{{ item.book.title }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ "{:,.0f}".format(item.unit_price) }} đ</td>
+                            <td>
+                                {{ "{:,.0f}".format(item.quantity * item.unit_price) }} đ
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="order-total-box">
+
+            <div class="summary-row">
+                <span>Tạm tính</span>
+                <strong>{{ "{:,.0f}".format(order.subtotal) }} đ</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Phí vận chuyển</span>
+                <strong>{{ "{:,.0f}".format(order.shipping_fee) }} đ</strong>
+            </div>
+
+            <div class="summary-total">
+                <span>Tổng cộng</span>
+                <strong>{{ "{:,.0f}".format(order.total) }} đ</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<section class="admin-card">
+
+    <h2>Cập nhật trạng thái</h2>
+
+    {% if order.status == 'Chờ xác nhận' %}
+
+        <form
+            method="POST"
+            action="{{ url_for('admin_order_status', order_id=order.id) }}"
+            class="status-form"
+        >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <select name="status" class="form-control" required>
+                <option value="Đang giao">Đang giao</option>
+                <option value="Đã huỷ">Đã huỷ</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary">
+                Cập nhật
+            </button>
+        </form>
+
+    {% elif order.status == 'Đang giao' %}
+
+        <form
+            method="POST"
+            action="{{ url_for('admin_order_status', order_id=order.id) }}"
+            class="status-form"
+        >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <select name="status" class="form-control" required>
+                <option value="Hoàn tất">Hoàn tất</option>
+                <option value="Đã huỷ">Đã huỷ</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary">
+                Cập nhật
+            </button>
+        </form>
+
+    {% else %}
+
+        <p>Đơn hàng đã kết thúc, không thể thay đổi trạng thái.</p>
+
+    {% endif %}
+
+</section>
+
+<section class="admin-card">
+
+    <h2>Lịch sử trạng thái</h2>
+
+    <div class="history-list">
+
+        {% for history in order.histories %}
+
+            <div class="history-item">
+                <strong>{{ history.status }}</strong>
+                <span>{{ history.created_at.strftime('%d/%m/%Y %H:%M') }}</span>
+            </div>
+
+        {% else %}
+
+            <p>Chưa có lịch sử trạng thái.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
